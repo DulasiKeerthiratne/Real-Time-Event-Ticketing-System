@@ -1,13 +1,13 @@
 public class Main {
     public static void main(String[] args) {
-        // Create a new configuration
-        Configuration config = new Configuration(true);
+        //create a new configuration
+        Configuration config = new Configuration(0, 0, 0, 0);
 
-        //Save the configuration from file
+        //save the configuration from file
         config.saveToFile();
 
-        // Load the configuration from file
+        //load the configuration from file
         Configuration loadedConfig = config.loadFromFile();
-        System.out.println("Loaded configuration: " + loadedConfig);
+        System.out.println("\n> Loaded configuration: " + loadedConfig);
     }
 }
