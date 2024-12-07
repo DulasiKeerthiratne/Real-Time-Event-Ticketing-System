@@ -23,9 +23,13 @@ public class TicketPool {
                 '}';
     }
 
-    //vendor creates ticket
     public synchronized void addTicket(){
         this.ticketsInPool++;
         System.out.println("Ticket sold by " + Thread.currentThread().getName() + " - Ticket Pool has " + getTicketsInPool() + " Ticket(s)");
+    }
+
+    public synchronized void removeTicket(int customerNumber){
+        this.ticketsInPool--;
+        System.out.println("Ticket bought by " + Thread.currentThread().getName() + " - Ticket Pool has " + getTicketsInPool() + " Ticket(s)");
     }
 }
