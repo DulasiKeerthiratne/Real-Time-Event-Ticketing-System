@@ -1,26 +1,27 @@
 public class Main {
     public static void main(String[] args) {
-        //create a new configuration
-        Configuration config = new Configuration(0, 0, 0, 0);
+        //Create a new configuration
+        Configuration config = new Configuration(0, 0, 0, 0, 0, 0);
 
-        //save the configuration from file
+        //Save the configuration from file
         config.saveToFile();
 
-        //load the configuration from file
+        //Load the configuration from file
         Configuration loadedConfig = config.loadFromFile();
         System.out.println("\n> Loaded configuration: " + loadedConfig);
 
-        //create ticket pool
-        TicketPool ticketPool = new TicketPool(config.getTotalTickets(), 0);
+        //Create a new ticket pool
+        TicketPool ticketPool = new TicketPool(config.getTotalTickets(), config.getMaxTicketCapacity());
 
-        for(int i = 1; i <= 5; i++){
-            Vendor vendor = new Vendor(config.getTotalTickets(), config.getTicketReleaseRate(), ticketPool);
+        //Vendor thread
+        for(int i = 1; i <= config.getVendorNumber(); i++){
+            Vendor vendor = new Vendor(config.getVendorNumber(), config.getTicketReleaseRate(), ticketPool);
             Thread vendorThread = new Thread(vendor);
             vendorThread.setName("Vendor " + i);
             vendorThread.start();
         }
 
-        for(int i = 1; i <= 3; i++){
+        for(int i = 1; i <= config.getCustomerNumber(); i++){
             Customer customer = new Customer(config.getCustomerRetrievalRate(), ticketPool);
             Thread customerThread = new Thread(customer);
             customerThread.setName("Customer " + i);
