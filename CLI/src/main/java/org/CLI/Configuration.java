@@ -21,8 +21,6 @@ public class Configuration {
     private int ticketReleaseRate;     // Time interval (in seconds) for ticket release by vendors
     private int customerRetrievalRate; // Time interval (in seconds) for customers to retrieve tickets
     private int maxTicketCapacity;     // Maximum ticket capacity allowed in the ticket pool
-    private int vendorNumber;          // Number of vendors in the system
-    private int customerNumber;        // Number of customers in the system
 
 
     //Default constructor for Configuration.
@@ -37,20 +35,13 @@ public class Configuration {
      * @param ticketReleaseRate      - Rate at which tickets are released (in seconds).
      * @param customerRetrievalRate  - Rate at which customers retrieve tickets (in seconds).
      * @param maxTicketCapacity      - Maximum ticket pool capacity.
-     * @param vendorNumber           - Number of vendors.
-     * @param customerNumber         - Number of customers.
      */
-    public Configuration(int totalTickets, int ticketReleaseRate, int customerRetrievalRate, int maxTicketCapacity, int vendorNumber, int customerNumber) {
-        System.out.println("\n    Configuration Management");
-        System.out.println("    ------------------------\n");
-
+    public Configuration(int totalTickets, int ticketReleaseRate, int customerRetrievalRate, int maxTicketCapacity) {
         // Validate user input for each configuration parameter
-        this.totalTickets = validateConfig("   Enter total tickets available in ticket pool: ");
-        this.ticketReleaseRate = validateConfig("   Enter ticket release rate (in seconds): ");
-        this.customerRetrievalRate = validateConfig("   Enter customer retrieval rate (in seconds): ");
-        this.maxTicketCapacity = validateConfig("   Enter max ticket capacity in ticket pool: ");
-        this.vendorNumber = validateConfig("   Enter number of vendors: ");
-        this.customerNumber = validateConfig("   Enter number of customers: ");
+        this.totalTickets = validateConfig("    Enter total tickets available in ticket pool: ");
+        this.ticketReleaseRate = validateConfig("    Enter ticket release rate (in seconds): ");
+        this.customerRetrievalRate = validateConfig("    Enter customer retrieval rate (in seconds): ");
+        this.maxTicketCapacity = validateConfig("    Enter max ticket capacity in ticket pool: ");
     }
 
     // Getter and Setter methods
@@ -86,22 +77,6 @@ public class Configuration {
         this.maxTicketCapacity = maxTicketCapacity;
     }
 
-    public int getVendorNumber() {
-        return vendorNumber;
-    }
-
-    public void setVendorNumber(int vendorNumber) {
-        this.vendorNumber = vendorNumber;
-    }
-
-    public int getCustomerNumber() {
-        return customerNumber;
-    }
-
-    public void setCustomerNumber(int customerNumber) {
-        this.customerNumber = customerNumber;
-    }
-
     /**
      * method for string representation of the configuration object.
      *
@@ -110,13 +85,11 @@ public class Configuration {
     @Override
     public String toString() {
         return "Configuration{" +
-                "totalTickets=" + totalTickets +
-                ", ticketReleaseRate=" + ticketReleaseRate +
-                ", customerRetrievalRate=" + customerRetrievalRate +
-                ", maxTicketCapacity=" + maxTicketCapacity +
-                ", vendorNumber=" + vendorNumber +
-                ", customerNumber=" + customerNumber +
-                '}';
+                "\n        totalTickets=" + totalTickets +
+                ", \n        ticketReleaseRate=" + ticketReleaseRate +
+                ", \n        customerRetrievalRate=" + customerRetrievalRate +
+                ", \n        maxTicketCapacity=" + maxTicketCapacity +
+                "\n    }";
     }
 
     /**
@@ -131,24 +104,24 @@ public class Configuration {
         int config;
 
         while (true) {
+            System.out.println();
             try {
                 System.out.print(prompt);
                 config = scanner.nextInt();
 
                 // Custom validation: Value must be non-negative
                 if (config < 0) {
-                    throw new NegativeInputError("Integer cannot be negative");
+                    throw new NegativeInputError("Integer cannot be negative\n");
                 } else {
                     break;
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input: Please enter an integer\n");
+                System.out.println("    Invalid input: Please enter an integer");
                 scanner.next(); // Clear invalid input
             } catch (NegativeInputError e) {
-                System.out.println("Invalid input: " + e.getMessage() + "\n");
+                System.out.print("    Invalid input: " + e.getMessage());
             }
         }
-
         return config;
     }
 
@@ -157,9 +130,9 @@ public class Configuration {
         Gson gson = new Gson();
         try (FileWriter writer = new FileWriter("configuration.json")) {
             gson.toJson(this, writer);
-            System.out.println("\n> Configuration saved successfully.");
+            System.out.println("    Configuration saved successfully.");
         } catch (IOException e) {
-            throw new RuntimeException("\nFailed to save configuration", e);
+            throw new RuntimeException("    Failed to save configuration", e);
         }
     }
 

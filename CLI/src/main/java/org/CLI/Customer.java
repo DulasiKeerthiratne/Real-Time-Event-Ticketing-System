@@ -9,6 +9,7 @@ public class Customer implements Runnable {
     private int customerID;            // Unique identifier for the customer
     private int customerRetrievalRate; // Time interval (in seconds) for retrieving tickets
     private TicketPool ticketPool;     //Shared ticket pool
+    private int customerCount;
 
     //Default constructor for the Vendor class.
     public Customer() {
@@ -19,7 +20,8 @@ public class Customer implements Runnable {
      *
      * @param customerRetrievalRate  - Time interval (in seconds) for retrieving tickets.
      */
-    public Customer(int customerRetrievalRate, TicketPool ticketPool) {
+    public Customer(int customerCount, int customerRetrievalRate, TicketPool ticketPool) {
+        this.customerCount = customerCount;
         this.customerRetrievalRate = customerRetrievalRate;
         this.ticketPool = ticketPool;
     }
@@ -47,6 +49,14 @@ public class Customer implements Runnable {
 
     public void setTicketPool(TicketPool ticketPool) {
         this.ticketPool = ticketPool;
+    }
+
+    public int getCustomerCount() {
+        return customerCount;
+    }
+
+    public void setCustomerCount(int customerCount) {
+        this.customerCount = customerCount;
     }
 
     /**

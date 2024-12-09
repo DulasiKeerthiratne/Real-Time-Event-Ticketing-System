@@ -15,13 +15,15 @@ public class Log {
     private File logDir;
     private String fileName;
     private Configuration config;
+    private int customerCount;
 
     public Log() {
         // Empty constructor
     }
 
-    public Log(Configuration config) {
+    public Log(Configuration config, int customer) {
         this.config = config;
+        this.customerCount = customerCount;
     }
 
     public void fileStarter() {
@@ -41,7 +43,7 @@ public class Log {
                              "                     Ticket Pool Purchase History\n                     " +
                              "------------------------------------------------------------------------\n\n");
             writer.write("Number of tickets: " + config.getTotalTickets() +
-                             "\nNumber of Vendors: " + config.getCustomerNumber() + "\n");
+                             "\nNumber of Vendors: " + customerCount + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,14 +52,14 @@ public class Log {
     // Method for logging the ticket details
     public void logging(Ticket ticket) {
         String logMessage = String.format(
-                "\n------------------------------------------------------------------------%n" +
-                        "Event       : " + ticket.getTicketType() + "\n" +
-                        "Price       : " + (ticket.getTicketPrice()) + "\n" +
-                        "Sold by     : " + ticket.getTicketVendor() + "\n" +
-                        "Bought by   : " + ticket.getTicketCustomer() + "\n" +
-                        "Sold at     : " + ticket.getSellTime() + "\n" +
-                        "Bought On   : " + ticket.getBuyTime() + "\n" +
-                "------------------------------------------------------------------------");
+                "    ------------------------------------------------------------------------\n" +
+                        "    Event       : " + ticket.getTicketType() + "\n" +
+                        "    Price       : " + (ticket.getTicketPrice()) + "\n" +
+                        "    Sold by     : " + ticket.getTicketVendor() + "\n" +
+                        "    Bought by   : " + ticket.getTicketCustomer() + "\n" +
+                        "    Sold at     : " + ticket.getSellTime() + "\n" +
+                        "    Bought On   : " + ticket.getBuyTime() + "\n" +
+                "    ------------------------------------------------------------------------");
 
         // Log the message using log4j
         logger.info("Purchase Information\n" + logMessage);
