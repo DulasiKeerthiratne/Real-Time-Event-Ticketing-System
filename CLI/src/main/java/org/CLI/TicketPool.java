@@ -2,15 +2,14 @@ package org.CLI;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TicketPool {
-    int totalTickets;
+    private int totalTickets;
     private int maxTicketCapacity;
-    private List<Ticket> ticketPool = Collections.synchronizedList(new ArrayList<>());
+    private Queue<Ticket> ticketPool = new ConcurrentLinkedQueue<>();
     private Log logger;
 
     public TicketPool() {
@@ -22,7 +21,7 @@ public class TicketPool {
         this.logger = logger;
     }
 
-    public synchronized int getTotalTickets() {
+    public int getTotalTickets() {
         return totalTickets;
     }
 
@@ -38,11 +37,11 @@ public class TicketPool {
         this.maxTicketCapacity = maxTicketCapacity;
     }
 
-    public List<Ticket> getTicketPool() {
+    public Queue<Ticket> getTicketPool() {
         return ticketPool;
     }
 
-    public void setTicketPool(List<Ticket> ticketPool) {
+    public void setTicketPool(Queue<Ticket> ticketPool) {
         this.ticketPool = ticketPool;
     }
 
@@ -50,12 +49,11 @@ public class TicketPool {
         Date date = new Date();
         SimpleDateFormat day = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat time = new SimpleDateFormat("hh:mm");
-        String sellTime = day.format(date) + " at " + time.format(date);
-        return sellTime;
+        return day.format(date) + " at " + time.format(date);
     }
 
     public synchronized void addTicket() {
-        while (ticketPool.size() > maxTicketCapacity) {
+        while (ticketPool.size() >= maxTicketCapacity || totalTickets <= 0) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -63,9 +61,9 @@ public class TicketPool {
             }
         }
         Ticket vendorTicket = new Ticket("Concert Ticket", new BigDecimal("1000.00"), Thread.currentThread().getName(), dateTime());
-        this.ticketPool.add(vendorTicket);
-        this.totalTickets--;
-        System.out.println("\nTicket sold by " + Thread.currentThread().getName() + "\nTicket Pool has " + ticketPool.size() + " Ticket(s)");
+        ticketPool.offer(vendorTicket); // Non-blocking add to queue
+        totalTickets--; // Decrease total tickets only when a ticket is added
+        System.out.println("\n    Ticket sold by " + Thread.currentThread().getName() + "\n    Ticket Pool has " + ticketPool.size() + " Ticket(s)");
         notifyAll();
     }
 
@@ -77,11 +75,10 @@ public class TicketPool {
                 Thread.currentThread().interrupt();
             }
         }
-        // Once a ticket is available, proceed with the purchase
-        Ticket customerTicket = ticketPool.remove(0);
+        Ticket customerTicket = ticketPool.poll();
         customerTicket.setTicketCustomer(Thread.currentThread().getName());
         customerTicket.setBuyTime(dateTime());
-        System.out.println("\nTicket bought by " + Thread.currentThread().getName() + "\nTicket Pool has " + ticketPool.size() + " Ticket(s)");
+        System.out.println("\n    Ticket bought by " + Thread.currentThread().getName() + "\n    Ticket Pool has " + ticketPool.size() + " Ticket(s)");
         logger.logging(customerTicket);
         notifyAll();
     }

@@ -9,8 +9,7 @@ public class Vendor implements Runnable {
     private int vendorId;           // Unique identifier for the vendor
     private int ticketReleaseRate;  // Time interval (in seconds) for releasing tickets
     private TicketPool ticketPool;
-    private int vendorNumber;// Shared ticket pool
-
+    private int vendorCount;          // Number of vendors in the system
 
     //Default constructor for the Vendor class.
     public Vendor() {
@@ -23,7 +22,7 @@ public class Vendor implements Runnable {
      * @param ticketPool         - Shared ticket pool.
      */
     public Vendor(int vendorNumber, int ticketReleaseRate, TicketPool ticketPool) {
-        this.vendorNumber = vendorNumber;
+        this.vendorCount = vendorNumber;
         this.ticketReleaseRate = ticketReleaseRate;
         this.ticketPool = ticketPool;
     }
@@ -53,6 +52,14 @@ public class Vendor implements Runnable {
         this.ticketPool = ticketPool;
     }
 
+    public int getVendorCount() {
+        return vendorCount;
+    }
+
+    public void setVendorCount(int vendorNumber) {
+        this.vendorCount = vendorNumber;
+    }
+
     /**
      * method for string representation of the vendor object.
      *
@@ -70,7 +77,7 @@ public class Vendor implements Runnable {
     //vendor thread
     @Override
     public void run() {
-        while (ticketPool.getTotalTickets() >= vendorNumber) {
+        while (ticketPool.getTotalTickets() >= 0) {
             ticketPool.addTicket();
 
             try {
