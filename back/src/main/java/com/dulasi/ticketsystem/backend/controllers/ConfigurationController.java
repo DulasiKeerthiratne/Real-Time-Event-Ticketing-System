@@ -2,7 +2,6 @@ package com.dulasi.ticketsystem.backend.controllers;
 
 import com.dulasi.ticketsystem.backend.models.Configuration;
 import com.dulasi.ticketsystem.backend.services.ConfigurationService;
-import com.dulasi.ticketsystem.backend.services.TicketPoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
